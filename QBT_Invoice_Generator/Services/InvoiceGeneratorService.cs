@@ -29,7 +29,7 @@ namespace QBT_Invoice_Generator.Services
         
         public async Task<byte[]> GenerateInvoice()
         {
-            string filePath = Directory.GetCurrentDirectory() + "/Html/Test.html";
+            string filePath = Environment.CurrentDirectory + "/Html/Test.html";
    
             // Check if the file exists
             if (!File.Exists(filePath))
