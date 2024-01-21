@@ -5,4 +5,4 @@ services:
     image: ${DOCKER_REGISTRY-}qbtinvoicegenerator
     build:
       context: .
-      dockerfile: QBT_Invoice_Generator/Dockerfile
+      dockerfile: ./QBT_Invoice_Generator/Dockerfile
