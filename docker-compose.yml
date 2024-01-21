@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  qbt_invoice_generator:
+    image: ${DOCKER_REGISTRY-}qbtinvoicegenerator
+    build:
+      context: .
+      dockerfile: QBT_Invoice_Generator/Dockerfile

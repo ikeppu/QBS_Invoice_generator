@@ -1,0 +1,6 @@
+@QBT_Invoice_Generator_HostAddress = http://localhost:5142
+
+GET {{QBT_Invoice_Generator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
