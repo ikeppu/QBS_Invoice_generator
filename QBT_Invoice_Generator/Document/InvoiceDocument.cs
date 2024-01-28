@@ -40,15 +40,14 @@ namespace QBT_Invoice_Generator.Document
 
         void ComposeHeader(IContainer container)
         {
-            var titleStyle = TextStyle.Default.FontSize(20).Bold().FontFamily("Arial");
+            var titleStyle = TextStyle.Default.FontSize(20).Bold();
 
             container.Row(row =>
             {
                 row.RelativeItem().Column(column =>
                 {
                     column.Item().AlignCenter().Text("Rēķins Nr.11-6/2022")
-                        .Style(titleStyle)
-                        .FontFamily("Arial");
+                        .Style(titleStyle);
                 });
             });
         }
@@ -76,8 +75,8 @@ namespace QBT_Invoice_Generator.Document
                         .Component(new AddressComponent("", Model.CustomerAddress));
                 });
 
-                column.Item().Text("Apmaksas termiņš: 14.06.2022").FontFamily("Arial");
-                column.Item().Text("Apmaksas veids: Bankas pārskaitījums").FontFamily("Arial");
+                column.Item().Text("Apmaksas termiņš: 14.06.2022");
+                column.Item().Text("Apmaksas veids: Bankas pārskaitījums");
 
                 column.Item().Element(ComposeTable);
 
@@ -87,21 +86,21 @@ namespace QBT_Invoice_Generator.Document
                 column.Item().AlignRight().Row(row => 
                 {
                     row.Spacing(3);
-                    row.ConstantItem(150).AlignCenter().Text("Summa kopā (EUR)").FontFamily("Arial");
-                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice}").FontFamily("Arial");
+                    row.ConstantItem(150).AlignCenter().Text("Summa kopā (EUR)");
+                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice}");
                 });
                 column.Item().AlignRight().Row(row =>
                 {
                     row.Spacing(3);
-                    row.ConstantItem(100).AlignCenter().Text("PVN 21%").Bold().FontFamily("Arial");
+                    row.ConstantItem(100).AlignCenter().Text("PVN 21%").Bold();
                     //row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{Math.Round(totalPrice * 1.21m - totalPrice, 2)}€").FontFamily("Arial");
-                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{taxAmount}").FontFamily("Arial");
+                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{taxAmount}");
                 });
                 column.Item().AlignRight().Row(row =>
                 {
                     row.Spacing(3);
-                    row.ConstantItem(200).AlignCenter().Text("Kopējā summa apmaksai (EUR)").Bold().FontFamily("Arial");
-                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice + taxAmount}").FontFamily("Arial");
+                    row.ConstantItem(200).AlignCenter().Text("Kopējā summa apmaksai (EUR)").Bold();
+                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice + taxAmount}");
                 });
 
                 if (!string.IsNullOrWhiteSpace(Model.Comments))
@@ -128,11 +127,11 @@ namespace QBT_Invoice_Generator.Document
                 table.Header(header =>
                 {
                     header.Cell().Element(CellStyle).Text("#");
-                    header.Cell().Element(CellStyle).Text("Nosaukums").FontFamily("Arial");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Mērvienība").FontFamily("Arial");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Daudzums").FontFamily("Arial");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Cena (EUR)").FontFamily("Arial");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Summa EUR").FontFamily("Arial");
+                    header.Cell().Element(CellStyle).Text("Nosaukums");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Mērvienība");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Daudzums");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Cena (EUR)");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Summa EUR");
 
                     static IContainer CellStyle(IContainer container)
                     {

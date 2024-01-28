@@ -24,23 +24,23 @@ namespace QBT_Invoice_Generator.Document
                 row.RelativeItem().Column(column => 
                 {
                     column.Spacing(2);
-                    column.Item().Text("Piegādātājs: " + Address.CompanyName + Address.CompanyName).FontFamily("Arial");
+                    column.Item().Text("Piegādātājs: " + Address.CompanyName + Address.CompanyName);
 
-                    column.Item().Text("Jurid.adrese: " + Address.CompanyName).FontFamily("Arial");
+                    column.Item().Text("Jurid.adrese: " + Address.CompanyName);
 
-                    column.Item().Text("Bankas nosaukums: " + Address.Street).FontFamily("Arial");
+                    column.Item().Text("Bankas nosaukums: " + Address.Street);
 
-                    column.Item().Text("Bankas kods: " + Address.Street).FontFamily("Arial");
+                    column.Item().Text("Bankas kods: " + Address.Street);
 
-                    column.Item().Text("Tālr./fakss: " + Address.Street).FontFamily("Arial");
+                    column.Item().Text("Tālr./fakss: " + Address.Street);
                 });
 
                 row.RelativeItem().Column(column =>
                 {
                     column.Spacing(2);
-                    column.Item().Text($"Reģ. Nr.: {Address.City}, {Address.State}").FontFamily("Arial");
-                    column.Item().Text("PVN Nr: " + Address.Email).FontFamily("Arial");
-                    column.Item().Text("Konts EUR: " + Address.Phone).FontFamily("Arial");
+                    column.Item().Text($"Reģ. Nr.: {Address.City}, {Address.State}");
+                    column.Item().Text("PVN Nr: " + Address.Email);
+                    column.Item().Text("Konts EUR: " + Address.Phone);
                 });
             });
         }
