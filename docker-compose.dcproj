@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
     <ProjectGuid>fbc08c86-a6c5-43a4-a389-4effad0e2cc4</ProjectGuid>
-    <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
+    <!--<DockerLaunchAction>LaunchBrowser</DockerLaunchAction>-->
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/weatherforecast</DockerServiceUrl>
     <DockerServiceName>qbt_invoice_generator</DockerServiceName>
   </PropertyGroup>

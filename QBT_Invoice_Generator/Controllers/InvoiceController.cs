@@ -1,5 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QBT_Invoice_Generator.Document;
 using QBT_Invoice_Generator.Services;
+using System.IO;
+using QuestPDF.Previewer;
+using QuestPDF.Fluent;
 
 namespace QBT_Invoice_Generator.Controllers
 {
@@ -18,9 +22,12 @@ namespace QBT_Invoice_Generator.Controllers
         [Route("generate")]
         public async Task<ActionResult> GenerateInvoice()
         {
-            var pdfBytes = await _invoiceService.GenerateInvoice();
-
-            return File(pdfBytes, "application/pdf", "output.pdf"); ;
+            var filePath = "invoice.pdf";
+            _invoiceService.GenerateInvoice();
+            var model = InvoiceDocumentDataSource.GetInvoiceDetails();
+            var document = new InvoiceDocument(model);
+            var result = document.GeneratePdf();
+            return File(result, "application/pdf", "invoice.pdf");
         }
     }
 }
