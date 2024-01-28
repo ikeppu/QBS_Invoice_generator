@@ -1,6 +1,8 @@
 ﻿using QBT_Invoice_Generator.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
+using System.Data.Common;
+using System.Text;
 
 namespace QBT_Invoice_Generator.Document
 {
@@ -17,18 +19,32 @@ namespace QBT_Invoice_Generator.Document
 
         public void Compose(IContainer container)
         {
-            container.Column(column =>
+            container.Row(row => 
             {
-                column.Spacing(2);
+                row.RelativeItem().Column(column => 
+                {
+                    column.Spacing(2);
+                    column.Item().Text("Piegādātājs: " + Address.CompanyName + Address.CompanyName).FontFamily("Arial");
 
-                column.Item().BorderBottom(1).PaddingBottom(5).Text(Title).SemiBold();
+                    column.Item().Text("Jurid.adrese: " + Address.CompanyName).FontFamily("Arial");
 
-                column.Item().Text(Address.CompanyName);
-                column.Item().Text(Address.Street);
-                column.Item().Text($"{Address.City}, {Address.State}");
-                column.Item().Text(Address.Email);
-                column.Item().Text(Address.Phone);
+                    column.Item().Text("Bankas nosaukums: " + Address.Street).FontFamily("Arial");
+
+                    column.Item().Text("Bankas kods: " + Address.Street).FontFamily("Arial");
+
+                    column.Item().Text("Tālr./fakss: " + Address.Street).FontFamily("Arial");
+                });
+
+                row.RelativeItem().Column(column =>
+                {
+                    column.Spacing(2);
+                    column.Item().Text($"Reģ. Nr.: {Address.City}, {Address.State}").FontFamily("Arial");
+                    column.Item().Text("PVN Nr: " + Address.Email).FontFamily("Arial");
+                    column.Item().Text("Konts EUR: " + Address.Phone).FontFamily("Arial");
+                });
             });
         }
+
+
     }
 }

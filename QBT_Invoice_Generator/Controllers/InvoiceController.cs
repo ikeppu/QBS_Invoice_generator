@@ -4,6 +4,8 @@ using QBT_Invoice_Generator.Services;
 using System.IO;
 using QuestPDF.Previewer;
 using QuestPDF.Fluent;
+using System.Text;
+using QBT_Invoice_Generator.Models;
 
 namespace QBT_Invoice_Generator.Controllers
 {
@@ -11,21 +13,25 @@ namespace QBT_Invoice_Generator.Controllers
     [Route("api/invoice")]
     public class InvoiceController : ControllerBase
     {
-        private readonly InvoiceGeneratorService _invoiceService;
-
-        public InvoiceController(InvoiceGeneratorService invoiceService)
-        {
-            _invoiceService = invoiceService;
-        }
 
         [HttpGet]
         [Route("generate")]
-        public async Task<ActionResult> GenerateInvoice()
+        public  ActionResult GenerateInvoice([FromQuery] string password)
         {
-            var model = InvoiceDocumentDataSource.GetInvoiceDetails();
-            var document = new InvoiceDocument(model);
-            var result = document.GeneratePdf();
-            return File(result, "application/pdf", "invoice.pdf");
+            Console.WriteLine($"--> Password {password}");
+
+            if(password == "query")
+            {
+                var model = InvoiceDocumentDataSource.GetInvoiceDetails();
+
+                var document = new InvoiceDocument(model);
+
+                var result = document.GeneratePdf();
+
+                return File(result, "application/pdf", "invoice.pdf");
+            }
+
+            return Ok("Hello world");
         }
     }
 }

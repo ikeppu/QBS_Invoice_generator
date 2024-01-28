@@ -1,9 +1,8 @@
 ﻿using QBT_Invoice_Generator.Models;
-using QuestPDF.Drawing;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using QuestPDF;
+using System.Data.Common;
 
 namespace QBT_Invoice_Generator.Document
 {
@@ -24,7 +23,7 @@ namespace QBT_Invoice_Generator.Document
             container
                 .Page(page =>
                 {
-                    page.Margin(50);
+                    page.Margin(20);
 
                     page.Header().Element(ComposeHeader);
                     page.Content().Element(ComposeContent);
@@ -41,28 +40,16 @@ namespace QBT_Invoice_Generator.Document
 
         void ComposeHeader(IContainer container)
         {
-            var titleStyle = TextStyle.Default.FontSize(20).SemiBold().FontColor(Colors.Blue.Medium);
+            var titleStyle = TextStyle.Default.FontSize(20).Bold().FontFamily("Arial");
 
             container.Row(row =>
             {
                 row.RelativeItem().Column(column =>
                 {
-                    column.Item().Text($"Invoice #{Model.InvoiceNumber}").Style(titleStyle);
-
-                    column.Item().Text(text =>
-                    {
-                        text.Span("Issue date: ").SemiBold();
-                        text.Span($"{Model.IssueDate:d}");
-                    });
-
-                    column.Item().Text(text =>
-                    {
-                        text.Span("Due date: ").SemiBold();
-                        text.Span($"{Model.DueDate:d}");
-                    });
+                    column.Item().AlignCenter().Text("Rēķins Nr.11-6/2022")
+                        .Style(titleStyle)
+                        .FontFamily("Arial");
                 });
-
-                row.ConstantItem(100).Height(50).Placeholder();
             });
         }
 
@@ -71,18 +58,51 @@ namespace QBT_Invoice_Generator.Document
             container.PaddingVertical(40).Column(column =>
             {
                 column.Spacing(5);
+               
 
                 column.Item().Row(row =>
                 {
-                    row.RelativeItem().Component(new AddressComponent("From", Model.SellerAddress));
-                    row.ConstantItem(50);
-                    row.RelativeItem().Component(new AddressComponent("For", Model.CustomerAddress));
+                    row.RelativeItem()
+                        .Border(1)
+                        .Padding(5)
+                        .Component(new AddressComponent("", Model.SellerAddress));
                 });
+
+                column.Item().Row(row =>
+                {
+                    row.RelativeItem()
+                        .Border(1)
+                        .Padding(5)
+                        .Component(new AddressComponent("", Model.CustomerAddress));
+                });
+
+                column.Item().Text("Apmaksas termiņš: 14.06.2022").FontFamily("Arial");
+                column.Item().Text("Apmaksas veids: Bankas pārskaitījums").FontFamily("Arial");
 
                 column.Item().Element(ComposeTable);
 
                 var totalPrice = Model.Items.Sum(x => x.Price * x.Quantity);
-                column.Item().AlignRight().Text($"Grand total: {totalPrice}$").FontSize(14);
+                var taxAmount = Math.Round(totalPrice * 0.21m, 2);
+
+                column.Item().AlignRight().Row(row => 
+                {
+                    row.Spacing(3);
+                    row.ConstantItem(150).AlignCenter().Text("Summa kopā (EUR)").FontFamily("Arial");
+                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice}").FontFamily("Arial");
+                });
+                column.Item().AlignRight().Row(row =>
+                {
+                    row.Spacing(3);
+                    row.ConstantItem(100).AlignCenter().Text("PVN 21%").Bold().FontFamily("Arial");
+                    //row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{Math.Round(totalPrice * 1.21m - totalPrice, 2)}€").FontFamily("Arial");
+                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{taxAmount}").FontFamily("Arial");
+                });
+                column.Item().AlignRight().Row(row =>
+                {
+                    row.Spacing(3);
+                    row.ConstantItem(200).AlignCenter().Text("Kopējā summa apmaksai (EUR)").Bold().FontFamily("Arial");
+                    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice + taxAmount}").FontFamily("Arial");
+                });
 
                 if (!string.IsNullOrWhiteSpace(Model.Comments))
                     column.Item().PaddingTop(25).Element(ComposeComments);
@@ -101,16 +121,18 @@ namespace QBT_Invoice_Generator.Document
                     columns.RelativeColumn();
                     columns.RelativeColumn();
                     columns.RelativeColumn();
+                    columns.RelativeColumn();
                 });
 
                 // step 2
                 table.Header(header =>
                 {
                     header.Cell().Element(CellStyle).Text("#");
-                    header.Cell().Element(CellStyle).Text("Product");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Unit price");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Quantity");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Total");
+                    header.Cell().Element(CellStyle).Text("Nosaukums").FontFamily("Arial");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Mērvienība").FontFamily("Arial");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Daudzums").FontFamily("Arial");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Cena (EUR)").FontFamily("Arial");
+                    header.Cell().Element(CellStyle).AlignRight().Text("Summa EUR").FontFamily("Arial");
 
                     static IContainer CellStyle(IContainer container)
                     {
@@ -123,9 +145,10 @@ namespace QBT_Invoice_Generator.Document
                 {
                     table.Cell().Element(CellStyle).Text(Model.Items.IndexOf(item) + 1);
                     table.Cell().Element(CellStyle).Text(item.Name);
-                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price}$");
-                    table.Cell().Element(CellStyle).AlignRight().Text(item.Quantity);
-                    table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price * item.Quantity}$");
+                    table.Cell().Element(CellStyle).AlignCenter().Text("kompl");
+                    table.Cell().Element(CellStyle).AlignCenter().Text(item.Quantity);
+                    table.Cell().Element(CellStyle).AlignCenter().Text(item.Price);
+                    table.Cell().Element(CellStyle).AlignCenter().Text($"{item.Price * item.Quantity}€");
 
                     static IContainer CellStyle(IContainer container)
                     {
@@ -143,7 +166,5 @@ namespace QBT_Invoice_Generator.Document
                 column.Item().Text(Model.Comments);
             });
         }
-
-  
     }
 }
