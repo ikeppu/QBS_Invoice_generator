@@ -22,8 +22,6 @@ namespace QBT_Invoice_Generator.Controllers
         [Route("generate")]
         public async Task<ActionResult> GenerateInvoice()
         {
-            var filePath = "invoice.pdf";
-            _invoiceService.GenerateInvoice();
             var model = InvoiceDocumentDataSource.GetInvoiceDetails();
             var document = new InvoiceDocument(model);
             var result = document.GeneratePdf();
