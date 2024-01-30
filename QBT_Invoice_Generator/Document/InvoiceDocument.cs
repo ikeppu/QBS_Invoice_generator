@@ -23,6 +23,7 @@ namespace QBT_Invoice_Generator.Document
             container
                 .Page(page =>
                 {
+                    page.DefaultTextStyle(x => x.FontFamily(Fonts.Verdana));
                     page.Margin(20);
 
                     page.Header().Element(ComposeHeader);
@@ -81,6 +82,9 @@ namespace QBT_Invoice_Generator.Document
                 column.Item().Element(ComposeTable);
 
                 var totalPrice = Model.Items.Sum(x => x.Price * x.Quantity);
+                decimal percentageReduction = 10; // 10% reduction
+                //decimal discount = Math.Round(totalPrice * (1 - percentageReduction / 100), 2);
+                //totalPrice = totalPrice - discount;
                 var taxAmount = Math.Round(totalPrice * 0.21m, 2);
 
                 column.Item().AlignRight().Row(row => 
@@ -89,6 +93,13 @@ namespace QBT_Invoice_Generator.Document
                     row.ConstantItem(150).AlignCenter().Text("Summa kopā (EUR)");
                     row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice}");
                 });
+                //column.Item().AlignRight().Row(row =>
+                //{
+                //    row.Spacing(3);
+                //    row.ConstantItem(100).AlignCenter().Text($"Atlaide (EUR) {percentageReduction}%").Bold();
+                //    //row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{Math.Round(totalPrice * 1.21m - totalPrice, 2)}€").FontFamily("Arial");
+                //    row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{discount}");
+                //});
                 column.Item().AlignRight().Row(row =>
                 {
                     row.Spacing(3);
@@ -102,9 +113,27 @@ namespace QBT_Invoice_Generator.Document
                     row.ConstantItem(200).AlignCenter().Text("Kopējā summa apmaksai (EUR)").Bold();
                     row.ConstantItem(75).Border(1).Padding(1).AlignCenter().Text($"{totalPrice + taxAmount}");
                 });
+                column.Item().Background(Colors.Grey.Lighten3).PaddingTop(10).Row(row => 
+                {
+                    row.Spacing(5);
+                    row.ConstantItem(150).Text("Apmaksas summa vārdiem:");
+                    row.RelativeColumn().Text("Trīsdesmit eiro 00 cents(i)").Bold();
+                });
 
-                if (!string.IsNullOrWhiteSpace(Model.Comments))
-                    column.Item().PaddingTop(25).Element(ComposeComments);
+
+                column.Item().PaddingTop(10).Row(row =>
+                {
+                    row.RelativeItem().Column(column => 
+                    {
+                        column.Spacing(3);
+                        column.Item().Text("Rēķins tiek sagatavots elektroniski un ir derīgs bez paraksta.");
+
+                        column.Item().Text("Pamatojoties uz \"Grāmatvedības likuma\" 11. pantu");
+
+                        column.Item().Text("Rēķinu sagatavoja Andrejs Sahniks");
+                    });
+                });
+
             });
         }
 

@@ -21,4 +21,6 @@ RUN dotnet publish "./QBT_Invoice_Generator.csproj" -c $BUILD_CONFIGURATION -o /
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY --from=build /src/QBT_Invoice_Generator/Fonts  .
+
 ENTRYPOINT ["dotnet", "QBT_Invoice_Generator.dll"]

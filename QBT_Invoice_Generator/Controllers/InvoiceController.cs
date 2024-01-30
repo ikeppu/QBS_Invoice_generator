@@ -28,10 +28,10 @@ namespace QBT_Invoice_Generator.Controllers
 
                 var result = document.GeneratePdf();
 
-                return File(result, "application/pdf", "invoice.pdf");
+                return File(result, "application/pdf;", "invoice.pdf");
             }
 
-            return Ok("Hello world");
+            return Ok("");
         }
     }
 }

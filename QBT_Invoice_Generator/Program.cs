@@ -5,7 +5,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 QuestPDF.Settings.License = LicenseType.Community;
+var fontCourierNewPath = Path.Combine(Directory.GetCurrentDirectory() + "/Verdana.ttf");
 
+using (var fontFileStream = File.OpenRead(fontCourierNewPath))
+{
+    QuestPDF.Drawing.FontManager.RegisterFontWithCustomName("Verdana", fontFileStream);
+} 
+
+Console.WriteLine();
 builder.Services.AddControllers();
 
 builder.Services.AddScoped<InvoiceGeneratorService>();
